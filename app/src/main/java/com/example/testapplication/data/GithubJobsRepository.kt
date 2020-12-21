@@ -42,9 +42,6 @@ class GithubJobsRepository @Inject constructor(
         var data = emptyList<GithubJob>()
         try {
             val response = remoteDataSource.getJobsFromNetwork()
-
-            //todo - error handling
-
             if (response.isSuccessful) {
                 response.body()?.let { body ->
                     data = body

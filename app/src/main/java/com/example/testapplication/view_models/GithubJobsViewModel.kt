@@ -16,7 +16,7 @@ class GithubJobsViewModel @Inject constructor(
     private val githubJobsRepository: GithubJobsRepository
 ) : ViewModel() {
 
-    var githubJobsModelLiveData = githubJobsRepository.getAllJobsFromLocal() //MutableLiveData<List<GithubJob>>()
+    var githubJobsModelLiveData = githubJobsRepository.getAllJobsFromLocal()
         private set
 
     init {

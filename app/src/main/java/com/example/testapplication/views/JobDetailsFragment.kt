@@ -3,6 +3,7 @@ package com.example.testapplication.views
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import com.example.testapplication.R
 import com.example.testapplication.models.GithubJob
 import com.example.testapplication.utilities.githubJobTimeFormatter
@@ -12,12 +13,6 @@ import kotlinx.android.synthetic.main.fragment_job_details.view.*
 import javax.inject.Inject
 
 class JobDetailsFragment:BaseFragment(R.layout.fragment_job_details) {
-
-    var githubJob:GithubJob ?= null
-
-    // Fields that need to be injected by the jobs graph
-    @Inject
-    lateinit var githubJobsViewModel: GithubJobsViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -30,27 +25,28 @@ class JobDetailsFragment:BaseFragment(R.layout.fragment_job_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        githubJob = (this.arguments?.getSerializable("job") as? GithubJob)
-        githubJob?.apply {
-            view.company_logo.loadFromUrlToGlide(companyLogo)
-            view.job_fragment_job_title.text = title
-            view.job_fragment_company_name.text = company
-            view.job_fragment_job_location.text = location
-            view.job_fragment_created.text = createdAt?.githubJobTimeFormatter()
-            view.job_fragment_description.text = description
-            view.job_fragment_type.text = type
-            view.job_fragment_url.text = companyUrl
-            view.job_fragment_apply.text = howToApply
-            view.job_fragment_favorite.isSelected = this.isItemInFavorites()
-            view.job_fragment_favorite.setOnClickListener {
-                it.isSelected = !it.isSelected
+        sharedViewModel.lastItemClicked.observe(viewLifecycleOwner, Observer {
+            it?.apply {
+                view.company_logo.loadFromUrlToGlide(companyLogo)
+                view.job_fragment_job_title.text = title
+                view.job_fragment_company_name.text = company
+                view.job_fragment_job_location.text = location
+                view.job_fragment_created.text = createdAt?.githubJobTimeFormatter()
+                view.job_fragment_description.text = description
+                view.job_fragment_type.text = type
+                view.job_fragment_url.text = companyUrl
+                view.job_fragment_apply.text = howToApply
+                view.job_fragment_favorite.isSelected = this.isItemInFavorites()
+                view.job_fragment_favorite.setOnClickListener {
+                    it.isSelected = !it.isSelected
+                }
             }
-        }
+        })
     }
 
     override fun onPause() {
         super.onPause()
-        githubJob?.let { githubJob ->
+        sharedViewModel.lastItemClicked.value?.let { githubJob ->
             if (view?.job_fragment_favorite?.isSelected == true && !githubJob.isItemInFavorites()) {
                 githubJobsViewModel.addJobFromPrefs(githubJob)
             }

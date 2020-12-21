@@ -5,23 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapplication.R
 import com.example.testapplication.adapters.GenericAdapter
 import com.example.testapplication.models.GithubJob
-import com.example.testapplication.utilities.observeOnce
 import com.example.testapplication.utilities.replaceFragment
 import com.example.testapplication.view_holders.MovieViewHolder
-import com.example.testapplication.view_models.GithubJobsViewModel
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import javax.inject.Inject
 
 class MainFragment: BaseFragment(R.layout.fragment_main) {
-
-    // Fields that need to be injected by the jobs graph
-    @Inject
-    lateinit var githubJobsViewModel: GithubJobsViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,7 +60,8 @@ class MainFragment: BaseFragment(R.layout.fragment_main) {
 
     fun onItemClicked(item: Any){
         (item as? GithubJob)?.let { job ->
-            jobsActivity.replaceFragment(JobDetailsFragment().apply { this.arguments = bundleOf("job" to job) })
+            sharedViewModel.lastItemClicked.value = job
+            jobsActivity.replaceFragment(JobDetailsFragment())
         }
     }
 }

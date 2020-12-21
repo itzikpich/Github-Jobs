@@ -16,10 +16,6 @@ import javax.inject.Inject
 
 class FavoritesFragment: BaseFragment(R.layout.fragment_main) {
 
-    // Fields that need to be injected by the jobs graph
-    @Inject
-    lateinit var githubJobsViewModel: GithubJobsViewModel
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
 //      inject Dagger in the fragments's onAttach() method, no matter before or after super
@@ -49,7 +45,7 @@ class FavoritesFragment: BaseFragment(R.layout.fragment_main) {
 
     override fun onResume() {
         super.onResume()
-        val list = githubJobsViewModel.getJobsFromPrefs()//jobsActivity.loadFavoritesFromSP()
+        val list = githubJobsViewModel.getJobsFromPrefs()
         genericAdapter.clearList()
         genericAdapter.setList(list)
     }
