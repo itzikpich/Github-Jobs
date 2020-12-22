@@ -40,7 +40,6 @@ class JobDetailsFragment:BaseFragment(R.layout.fragment_job_details) {
             view.job_fragment_type.text = type
             view.job_fragment_url.text = companyUrl
             view.job_fragment_apply.text = howToApply
-            view.job_fragment_favorite.isSelected = this.isItemInFavorites()
             view.job_fragment_favorite.setOnClickListener {
                 it.isSelected = !it.isSelected
                 githubJobsViewModel.addOrRemoveFromPreferences(it.isSelected, this)
@@ -54,29 +53,6 @@ class JobDetailsFragment:BaseFragment(R.layout.fragment_job_details) {
                 }
             }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        println("githubJob: " + githubJob?.toString())
-    }
-
-    override fun onPause() {
-        super.onPause()
-//        githubJob?.let { githubJob ->
-//            if (view?.job_fragment_favorite?.isSelected == true && !githubJob.isItemInFavorites()) {
-//                githubJobsViewModel.addJobFromPrefs(githubJob)
-//            }
-//            if (view?.job_fragment_favorite?.isSelected == false && githubJob.isItemInFavorites()) {
-//                githubJobsViewModel.removeJobFromPrefs(githubJob)
-//            }
-//        }
-    }
-
-    private fun GithubJob.isItemInFavorites(): Boolean {
-        val favorites = githubJobsViewModel.getJobsFromPrefs()
-        val item = favorites.find { it.id == this.id  }
-        return item != null
     }
 
 }
