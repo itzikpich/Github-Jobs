@@ -2,13 +2,11 @@ package com.example.testapplication.data
 
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.testapplication.data.local.JobsLocalDataSource
 import com.example.testapplication.data.remote.JobsRemoteDataSource
 import com.example.testapplication.models.GithubJob
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,7 +52,9 @@ class GithubJobsRepository @Inject constructor(
     }
 
     fun getFavoritesJobsFromSP() = localDataSource.loadFavoritesFromSP()
-    fun addFavoriteJobsFromSP(githubJob: GithubJob) = localDataSource.addFavoriteToSP(githubJob)
-    fun removeFavoriteJobsFromSP(githubJob: GithubJob) = localDataSource.removeFavoriteFromSP(githubJob)
+    fun addFavoriteJobsFromSP(githubJob: GithubJob) = localDataSource.addOrRemoveFavoriteFromSP(true, githubJob)
+    fun removeFavoriteJobsFromSP(githubJob: GithubJob) = localDataSource.addOrRemoveFavoriteFromSP(false, githubJob)
+    fun addOrRemoveFavoriteJobsFromSP(add: Boolean, githubJob: GithubJob) = localDataSource.addOrRemoveFavoriteFromSP(add, githubJob)
 
+    val sharedPreferenceFavoritesLiveData = localDataSource.sharedPreferenceFavoritesLiveData
 }

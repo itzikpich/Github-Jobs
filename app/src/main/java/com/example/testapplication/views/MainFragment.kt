@@ -60,8 +60,8 @@ class MainFragment: BaseFragment(R.layout.fragment_main) {
 
     fun onItemClicked(item: Any){
         (item as? GithubJob)?.let { job ->
-            sharedViewModel.lastItemClicked.value = job
-            jobsActivity.replaceFragment(JobDetailsFragment())
+//            sharedViewModel.lastItemClicked.value = job
+            jobsActivity.replaceFragment(JobDetailsFragment().apply { this.arguments = bundleOf("job" to job) })
         }
     }
 }

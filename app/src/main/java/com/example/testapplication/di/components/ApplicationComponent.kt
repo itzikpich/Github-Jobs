@@ -7,6 +7,7 @@ import com.example.testapplication.di.ActivitiesBindingModule
 import com.example.testapplication.di.modules.LocalDataSourceModule
 import com.example.testapplication.di.modules.NetworkModule
 import com.example.testapplication.di.modules.SubcomponentsModule
+import com.example.testapplication.di.modules.ViewModelModule
 import com.google.gson.Gson
 import dagger.BindsInstance
 import dagger.Component
@@ -20,6 +21,7 @@ import javax.inject.Singleton
     NetworkModule::class,
     LocalDataSourceModule::class,
     SubcomponentsModule::class,
+    ViewModelModule::class,
     ActivitiesBindingModule::class,
     AndroidSupportInjectionModule::class
 ])

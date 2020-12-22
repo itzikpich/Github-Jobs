@@ -4,17 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapplication.R
 import com.example.testapplication.adapters.GenericAdapter
 import com.example.testapplication.models.GithubJob
 import com.example.testapplication.utilities.flipFragment
 import com.example.testapplication.view_holders.MovieViewHolder
-import com.example.testapplication.view_models.GithubJobsViewModel
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import javax.inject.Inject
 
 class FavoritesFragment: BaseFragment(R.layout.fragment_main) {
+
+    @Inject lateinit var gson: Gson
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -25,7 +28,7 @@ class FavoritesFragment: BaseFragment(R.layout.fragment_main) {
 //      (shared instance with the Activity and the other Fragments)
     }
 
-    val genericAdapter = object : GenericAdapter<Any>(
+    private val genericAdapter = object : GenericAdapter<Any>(
         clickAction = {
             onItemClicked(it)
         }) {
@@ -38,16 +41,22 @@ class FavoritesFragment: BaseFragment(R.layout.fragment_main) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         view.fragmentMainRecyclerView.adapter = genericAdapter
-
+        githubJobsViewModel.sharedPreferenceFavoritesLiveData.observe(viewLifecycleOwner, Observer { data ->
+            data?.let {
+                gson.fromJson(it, Array<GithubJob>::class.java)?.let { list ->
+                    genericAdapter.clearList()
+                    genericAdapter.setList(list.toMutableList())
+                }
+            }
+        })
     }
 
     override fun onResume() {
         super.onResume()
-        val list = githubJobsViewModel.getJobsFromPrefs()
-        genericAdapter.clearList()
-        genericAdapter.setList(list)
+//        val list = githubJobsViewModel.getJobsFromPrefs()
+//        genericAdapter.clearList()
+//        genericAdapter.setList(list)
     }
 
     fun onItemClicked(item: Any){

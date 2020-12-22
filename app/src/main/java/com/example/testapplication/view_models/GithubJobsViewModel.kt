@@ -1,17 +1,14 @@
 package com.example.testapplication.view_models
 
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testapplication.ActivityScope
 import com.example.testapplication.data.GithubJobsRepository
 import com.example.testapplication.models.GithubJob
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ActivityScope
+//@ActivityScope
 class GithubJobsViewModel @Inject constructor(
     private val githubJobsRepository: GithubJobsRepository
 ) : ViewModel() {
@@ -42,6 +39,13 @@ class GithubJobsViewModel @Inject constructor(
         return githubJobsRepository.removeFavoriteJobsFromSP(job)
     }
 
+    fun addOrRemoveFromPreferences(add: Boolean, job: GithubJob) = githubJobsRepository.addOrRemoveFavoriteJobsFromSP(add, job)
+
+    val sharedPreferenceFavoritesLiveData = githubJobsRepository.sharedPreferenceFavoritesLiveData
+
+    fun saveDataToFavorites(job: GithubJob) {
+        sharedPreferenceFavoritesLiveData.value
+    }
 
 
 }

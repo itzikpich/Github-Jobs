@@ -9,10 +9,14 @@ import com.example.testapplication.models.GithubJob
 import com.example.testapplication.utilities.githubJobTimeFormatter
 import com.example.testapplication.utilities.loadFromUrlToGlide
 import com.example.testapplication.view_models.GithubJobsViewModel
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_job_details.view.*
 import javax.inject.Inject
 
 class JobDetailsFragment:BaseFragment(R.layout.fragment_job_details) {
+
+    var githubJob:GithubJob? = null
+    @Inject lateinit var gson: Gson
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -25,35 +29,48 @@ class JobDetailsFragment:BaseFragment(R.layout.fragment_job_details) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedViewModel.lastItemClicked.observe(viewLifecycleOwner, Observer {
-            it?.apply {
-                view.company_logo.loadFromUrlToGlide(companyLogo)
-                view.job_fragment_job_title.text = title
-                view.job_fragment_company_name.text = company
-                view.job_fragment_job_location.text = location
-                view.job_fragment_created.text = createdAt?.githubJobTimeFormatter()
-                view.job_fragment_description.text = description
-                view.job_fragment_type.text = type
-                view.job_fragment_url.text = companyUrl
-                view.job_fragment_apply.text = howToApply
-                view.job_fragment_favorite.isSelected = this.isItemInFavorites()
-                view.job_fragment_favorite.setOnClickListener {
-                    it.isSelected = !it.isSelected
+        githubJob = (this.arguments?.getSerializable("job") as? GithubJob)
+        githubJob?.apply {
+            view.company_logo.loadFromUrlToGlide(companyLogo)
+            view.job_fragment_job_title.text = title
+            view.job_fragment_company_name.text = company
+            view.job_fragment_job_location.text = location
+            view.job_fragment_created.text = createdAt?.githubJobTimeFormatter()
+            view.job_fragment_description.text = description
+            view.job_fragment_type.text = type
+            view.job_fragment_url.text = companyUrl
+            view.job_fragment_apply.text = howToApply
+            view.job_fragment_favorite.isSelected = this.isItemInFavorites()
+            view.job_fragment_favorite.setOnClickListener {
+                it.isSelected = !it.isSelected
+                githubJobsViewModel.addOrRemoveFromPreferences(it.isSelected, this)
+            }
+        }
+        githubJobsViewModel.sharedPreferenceFavoritesLiveData.observe(viewLifecycleOwner, Observer { data ->
+            data?.let {
+                gson.fromJson(it, Array<GithubJob>::class.java)?.let { favorites ->
+                    val item = favorites.find { favorite -> favorite.id == githubJob?.id  }
+                    view.job_fragment_favorite.isSelected = item != null
                 }
             }
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        println("githubJob: " + githubJob?.toString())
+    }
+
     override fun onPause() {
         super.onPause()
-        sharedViewModel.lastItemClicked.value?.let { githubJob ->
-            if (view?.job_fragment_favorite?.isSelected == true && !githubJob.isItemInFavorites()) {
-                githubJobsViewModel.addJobFromPrefs(githubJob)
-            }
-            if (view?.job_fragment_favorite?.isSelected == false && githubJob.isItemInFavorites()) {
-                githubJobsViewModel.removeJobFromPrefs(githubJob)
-            }
-        }
+//        githubJob?.let { githubJob ->
+//            if (view?.job_fragment_favorite?.isSelected == true && !githubJob.isItemInFavorites()) {
+//                githubJobsViewModel.addJobFromPrefs(githubJob)
+//            }
+//            if (view?.job_fragment_favorite?.isSelected == false && githubJob.isItemInFavorites()) {
+//                githubJobsViewModel.removeJobFromPrefs(githubJob)
+//            }
+//        }
     }
 
     private fun GithubJob.isItemInFavorites(): Boolean {

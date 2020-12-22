@@ -5,15 +5,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.testapplication.di.components.JobsSubcomponent
-import com.example.testapplication.models.GithubJob
 import com.example.testapplication.utilities.addFragment
 import com.example.testapplication.utilities.flipFragment
-import com.example.testapplication.view_models.GithubJobsViewModel
 import com.example.testapplication.views.FavoritesFragment
 import com.example.testapplication.views.MainFragment
-import com.google.gson.Gson
-import javax.inject.Inject
 import javax.inject.Scope
 
 // Definition of a custom scope called ActivityScope
@@ -22,9 +19,6 @@ import javax.inject.Scope
 annotation class ActivityScope
 
 class JobsActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var githubJobsViewModel: GithubJobsViewModel
 
     lateinit var jobsSubcomponent: JobsSubcomponent
 
