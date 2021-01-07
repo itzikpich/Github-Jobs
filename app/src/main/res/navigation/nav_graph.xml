@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/mainFragment"
+    android:id="@+id/nav_graph">
+
+    <action
+        android:id="@+id/action_to_detailsFrgment"
+        app:destination="@id/detailsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
+        />
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:label="all Jobs"
+        android:name="com.example.testapplication.views.MainFragment"
+        tools:layout="@layout/fragment_main"
+        >
+        <action
+            android:id="@+id/action_mainFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="job"
+                android:defaultValue="@null"
+                app:nullable="true"
+                app:argType="com.example.testapplication.models.GithubJob"
+                />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:label="single job"
+        android:name="com.example.testapplication.views.JobDetailsFragment"
+        tools:layout="@layout/fragment_job_details"
+        >
+        <argument
+            android:name="job"
+            android:defaultValue="@null"
+            app:nullable="true"
+            app:argType="com.example.testapplication.models.GithubJob"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:label="Favorites"
+        android:name="com.example.testapplication.views.FavoritesFragment"
+        tools:layout="@layout/fragment_main"
+        >
+        <action
+            android:id="@+id/action_favoritesFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+</navigation>

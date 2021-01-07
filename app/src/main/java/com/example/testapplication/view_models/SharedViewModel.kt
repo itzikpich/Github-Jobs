@@ -7,7 +7,6 @@ import com.example.testapplication.models.GithubJob
 import javax.inject.Inject
 import kotlin.properties.Delegates.notNull
 
-@ActivityScope
 class SharedViewModel@Inject constructor() : ViewModel() {
 
     val lastItemClicked: MutableLiveData<GithubJob> by lazy {

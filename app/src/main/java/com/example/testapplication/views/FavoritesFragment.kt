@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapplication.R
 import com.example.testapplication.adapters.GenericAdapter
@@ -28,20 +29,27 @@ class FavoritesFragment: BaseFragment(R.layout.fragment_main) {
 //      (shared instance with the Activity and the other Fragments)
     }
 
-    private val genericAdapter = object : GenericAdapter<Any>(
-        clickAction = {
-            onItemClicked(it)
-        }) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        override fun getLayoutId(position: Int, obj: Any): Int = R.layout.item_github_job
+        val genericAdapter = object : GenericAdapter<Any>(
+            clickAction = {
+                onItemClicked(view, it)
+            }) {
 
-        override fun getViewHolder(view: View, viewType: Int): RecyclerView.ViewHolder = MovieViewHolder(view)
+            override fun getLayoutId(position: Int, obj: Any): Int = R.layout.item_github_job
+
+            override fun getViewHolder(view: View, viewType: Int): RecyclerView.ViewHolder = MovieViewHolder(view)
+
+        }
+
+        setViewModel(genericAdapter)
+
+        view.fragmentMainRecyclerView.adapter = genericAdapter
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.fragmentMainRecyclerView.adapter = genericAdapter
+    private fun setViewModel(genericAdapter: GenericAdapter<Any>) =
         githubJobsViewModel.sharedPreferenceFavoritesLiveData.observe(viewLifecycleOwner, Observer { data ->
             data?.let {
                 gson.fromJson(it, Array<GithubJob>::class.java)?.let { list ->
@@ -50,18 +58,14 @@ class FavoritesFragment: BaseFragment(R.layout.fragment_main) {
                 }
             }
         })
-    }
 
-    override fun onResume() {
-        super.onResume()
-//        val list = githubJobsViewModel.getJobsFromPrefs()
-//        genericAdapter.clearList()
-//        genericAdapter.setList(list)
-    }
-
-    fun onItemClicked(item: Any){
+    fun onItemClicked(view: View, item: Any){
         (item as? GithubJob)?.let { job ->
-            jobsActivity.flipFragment(JobDetailsFragment().apply { this.arguments = bundleOf("job" to job) })
+//            sharedViewModel.lastItemClicked.value = job
+//            view.findNavController().navigate(FavoritesFragmentDirections.actionFavoritesFragmentToDetailsFragment(job))
+            view.findNavController().navigate(R.id.action_to_detailsFrgment, bundleOf("job" to job))
+//            jobsActivity.replaceFragment(JobDetailsFragment().apply { this.arguments = bundleOf("job" to job) })
         }
     }
+
 }

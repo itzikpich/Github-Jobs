@@ -1,6 +1,8 @@
 package com.example.testapplication.view_models
 
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testapplication.data.GithubJobsRepository
@@ -26,6 +28,8 @@ class GithubJobsViewModel @Inject constructor(
             githubJobsRepository.addAllJobsFromLocal(jobs)
         }
     }
+
+    val currentJob : MutableLiveData<GithubJob> = MutableLiveData()
 
     fun getJobsFromPrefs() : MutableList<GithubJob>{
         return githubJobsRepository.getFavoritesJobsFromSP()

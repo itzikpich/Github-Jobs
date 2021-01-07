@@ -17,7 +17,12 @@ class ExampleUnitTest {
     }
 
     @Test
-    suspend fun getPopularMovies() {
-//        assertTrue(GithubJobsRepository.getPopularMoviesFromServer().isSuccessful)
+    fun getPopularMovies() {
+//        ScopeFunctions().let()
+//        ScopeFunctions().apply()
+//        ScopeFunctions().run()
+//        ScopeFunctions().also()
+//        ScopeFunctions().with()
+        ScopeFunctions().scopeFunctions()
     }
 }

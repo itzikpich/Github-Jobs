@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapplication.R
 import com.example.testapplication.adapters.GenericAdapter
@@ -32,7 +33,7 @@ class MainFragment: BaseFragment(R.layout.fragment_main) {
 
         val genericAdapter = object : GenericAdapter<Any>(
             clickAction = {
-                onItemClicked(it)
+                onItemClicked(view, it)
             }) {
 
             override fun getLayoutId(position: Int, obj: Any): Int = R.layout.item_github_job
@@ -51,17 +52,18 @@ class MainFragment: BaseFragment(R.layout.fragment_main) {
     ) {
 //        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
-        githubJobsViewModel.githubJobsModelLiveData.observe(viewLifecycleOwner, Observer {
+        githubJobsViewModel.githubJobsModelLiveData.observe(viewLifecycleOwner, {
             it?.apply {
                 genericAdapter.setList(this)
             }
         })
     }
 
-    fun onItemClicked(item: Any){
+    fun onItemClicked(view: View, item: Any){
         (item as? GithubJob)?.let { job ->
 //            sharedViewModel.lastItemClicked.value = job
-            jobsActivity.replaceFragment(JobDetailsFragment().apply { this.arguments = bundleOf("job" to job) })
+            view.findNavController().navigate(MainFragmentDirections.actionMainFragmentToDetailsFragment(job))
+//            jobsActivity.replaceFragment(JobDetailsFragment().apply { this.arguments = bundleOf("job" to job) })
         }
     }
 }

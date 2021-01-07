@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.example.testapplication.di.components.JobsSubcomponent
 import com.example.testapplication.utilities.addFragment
 import com.example.testapplication.utilities.flipFragment
@@ -23,7 +24,7 @@ class JobsActivity : AppCompatActivity() {
     lateinit var jobsSubcomponent: JobsSubcomponent
 
     companion object{
-        const val FRAGMENT_CONTAINER = R.id.frameContainer
+        const val FRAGMENT_CONTAINER = 0//R.id.frameContainer
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,9 +36,9 @@ class JobsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 //        sharedPref = this.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        if (savedInstanceState == null) {
-            this.addFragment(MainFragment())
-        }
+//        if (savedInstanceState == null) {
+//            this.addFragment(MainFragment())
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,16 +49,17 @@ class JobsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.action_fav -> {
-                this.flipFragment(FavoritesFragment())
+//                this.flipFragment(FavoritesFragment())
+                this.findNavController(R.id.nav_host_fragment).navigate(R.id.favoritesFragment)
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onBackPressed() {
-        if (supportFragmentManager.fragments.last() is MainFragment) finish()
-        else super.onBackPressed()
-    }
+//    override fun onBackPressed() {
+//        if (supportFragmentManager.fragments.last() is MainFragment) finish()
+//        else super.onBackPressed()
+//    }
 
 }
